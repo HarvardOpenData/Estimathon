@@ -8,7 +8,7 @@ function CustomLink(props) {
     <Link to={to} component={RouterLink} variant="body2">
       {children}
     </Link>
-  )
+  );
 }
 
 export default CustomLink;

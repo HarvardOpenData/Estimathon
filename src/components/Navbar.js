@@ -1,7 +1,7 @@
 import React from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
-import {AppBar, Button, IconButton, Toolbar} from "@material-ui/core";
+import { AppBar, Button, IconButton, Toolbar } from "@material-ui/core";
 import { Menu } from "@material-ui/icons";
 import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
@@ -20,13 +20,18 @@ const useStyles = makeStyles((theme) => ({
 
 function Navbar() {
   const classes = useStyles();
-  const {currentUser, signout} = useAuth();
+  const { currentUser, signout } = useAuth();
 
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+          <IconButton
+            edge="start"
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="menu"
+          >
             <Menu />
           </IconButton>
           <Button color="inherit" component={Link} to={"/"}>
@@ -41,7 +46,11 @@ function Navbar() {
                 Sign Up
               </Button>
             </React.Fragment>
-          ) : (<Button color="inherit" onClick={signout}>Sign Out</Button>)}
+          ) : (
+            <Button color="inherit" onClick={signout}>
+              Sign Out
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
     </div>
