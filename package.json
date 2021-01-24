@@ -25,7 +25,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "format": "prettier --write \"**/*.js\" \"!.idea/**\" \"!.netlify/**\" \"!build/**\" \"!node_modules/**\" \"!public/**\" "
+    "format": "prettier --write \"src/**/*.js\""
   },
   "eslintConfig": {
     "extends": [
