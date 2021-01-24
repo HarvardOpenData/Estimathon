@@ -10,10 +10,9 @@ import {
   DialogContentText,
   DialogTitle,
   FormControlLabel,
-  Grid,
   makeStyles,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -44,7 +43,7 @@ function SignupPage() {
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmationRef = useRef();
-  const {signup, currentUser} = useAuth();
+  const { signup, currentUser } = useAuth();
   const history = useHistory();
 
   const [error, setError] = useState(false);
@@ -64,7 +63,9 @@ function SignupPage() {
 
     if (passwordRef.current.value.length < 6) {
       setFailedPass(true);
-    } else if (passwordRef.current.value !== passwordConfirmationRef.current.value) {
+    } else if (
+      passwordRef.current.value !== passwordConfirmationRef.current.value
+    ) {
       setFailedConfirmPass(true);
     } else {
       try {
@@ -88,9 +89,7 @@ function SignupPage() {
           <Dialog open={error} onClose={handleClose}>
             <DialogTitle>Error</DialogTitle>
             <DialogContent>
-              <DialogContentText>
-                Failed to create an account
-              </DialogContentText>
+              <DialogContentText>Failed to create an account</DialogContentText>
             </DialogContent>
           </Dialog>
           <Typography component="h1" variant="h5">
@@ -120,7 +119,9 @@ function SignupPage() {
               id="password"
               inputRef={passwordRef}
               error={failedPass}
-              helperText={failedPass ? "Password is not 6 characters long." : null}
+              helperText={
+                failedPass ? "Password is not 6 characters long." : null
+              }
             />
             <TextField
               variant="outlined"
@@ -133,10 +134,14 @@ function SignupPage() {
               id="password confirmation"
               inputRef={passwordConfirmationRef}
               error={failedConfirmPass}
-              helperText={failedConfirmPass ? "Password confirmation does not match password." : null}
+              helperText={
+                failedConfirmPass
+                  ? "Password confirmation does not match password."
+                  : null
+              }
             />
             <FormControlLabel
-              control={<Checkbox value="remember" color="primary"/>}
+              control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
             <Button
@@ -154,9 +159,13 @@ function SignupPage() {
             </CustomLink>
           </form>
         </div>
-      ) : (<div>You are already logged in. Please sign out before signing up again.</div>)}
+      ) : (
+        <div>
+          You are already logged in. Please sign out before signing up again.
+        </div>
+      )}
       <Backdrop className={classes.backdrop} open={loading}>
-        <CircularProgress color="inherit"/>
+        <CircularProgress color="inherit" />
       </Backdrop>
     </Container>
   );

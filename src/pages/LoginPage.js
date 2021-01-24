@@ -11,7 +11,7 @@ import {
   Grid,
   makeStyles,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -41,7 +41,7 @@ function LoginPage() {
   const classes = useStyles();
   const emailRef = useRef();
   const passwordRef = useRef();
-  const {login, currentUser} = useAuth();
+  const { login, currentUser } = useAuth();
 
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -74,9 +74,7 @@ function LoginPage() {
           <Dialog open={error} onClose={handleClose}>
             <DialogTitle>Error</DialogTitle>
             <DialogContent>
-              <DialogContentText>
-                Failed to log in
-              </DialogContentText>
+              <DialogContentText>Failed to log in</DialogContentText>
             </DialogContent>
           </Dialog>
           <Typography component="h1" variant="h5">
@@ -119,9 +117,7 @@ function LoginPage() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <CustomLink to={"/"}>
-                  Forgot password?
-                </CustomLink>
+                <CustomLink to={"/"}>Forgot password?</CustomLink>
               </Grid>
               <Grid item>
                 <CustomLink to={"/signup"}>
@@ -131,9 +127,13 @@ function LoginPage() {
             </Grid>
           </form>
         </div>
-      ) : (<div>You are already logged in. Please sign out before logging in again.</div>)}
+      ) : (
+        <div>
+          You are already logged in. Please sign out before logging in again.
+        </div>
+      )}
       <Backdrop className={classes.backdrop} open={loading}>
-        <CircularProgress color="inherit"/>
+        <CircularProgress color="inherit" />
       </Backdrop>
     </Container>
   );
