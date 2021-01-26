@@ -6,6 +6,7 @@ import AboutPage from "../pages/AboutPage";
 import TeamPage from "../pages/TeamPage";
 import LoginPage from "../pages/LoginPage";
 import SignupPage from "../pages/SignupPage";
+import ProfilePage from "../pages/ProfilePage";
 import Navbar from "./Navbar";
 import { theme } from "../theme";
 import { ThemeProvider } from "@material-ui/core";
@@ -24,6 +25,7 @@ function App() {
             <Route exact path={"/team"} component={TeamPage} />
             <Route exact path={"/login"} component={LoginPage} />
             <Route exact path={"/signup"} component={SignupPage} />
+            <Route exact path={"/profile"} component={ProfilePage} />
             <Route>
               <div>Page Not Found</div>
             </Route>

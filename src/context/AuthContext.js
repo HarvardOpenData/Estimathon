@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { auth } from "../firebase.js";
+import app, { auth } from "../firebase.js";
 import firebase from "firebase";
 import { Backdrop, CircularProgress, makeStyles } from "@material-ui/core";
 
@@ -32,6 +32,12 @@ export function AuthProvider({ children }) {
       .then((cred) => {
         const user = cred.user;
         setLoading(false);
+        app
+          .database()
+          .ref("/users/" + user.uid)
+          .update({
+            email: user.email,
+          });
         console.log("Anonymous account successfully upgraded", user);
       })
       .catch((error) => {
@@ -50,6 +56,10 @@ export function AuthProvider({ children }) {
         user
           .delete()
           .catch((error) => console.log("Error deleting account", error));
+        app
+          .database()
+          .ref("/users/" + user.uid)
+          .remove();
       })
       .catch((error) => {
         console.log("Error logging in", error);
@@ -75,10 +85,18 @@ export function AuthProvider({ children }) {
       } else {
         // User is signed out.
         setCurrentUser(null);
-        firebase
-          .auth()
+        auth
           .signInAnonymously()
-          .catch((error) => {
+          .then((cred) => {
+            const userId = cred.user.uid;
+            app
+              .database()
+              .ref("/users/" + userId)
+              .set({
+                date_created: firebase.database.ServerValue.TIMESTAMP,
+              });
+          })
+          .catch(() => {
             alert("Unable to connect to the server. Please try again later.");
           });
       }
