@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import app, { auth } from "../firebase.js";
 import firebase from "firebase";
+import generate from "project-name-generator";
 import { Backdrop, CircularProgress, makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -18,7 +19,8 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const classes = useStyles();
-  const [currentUser, setCurrentUser] = useState();
+  const [authUser, setAuthUser] = useState();
+  const [user, setUser] = useState();
   const [loading, setLoading] = useState(true);
 
   function signup(email, password) {
@@ -80,11 +82,10 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        setCurrentUser(user);
-        setLoading(false);
+        setAuthUser(user);
       } else {
         // User is signed out.
-        setCurrentUser(null);
+        setAuthUser(null);
         auth
           .signInAnonymously()
           .then((cred) => {
@@ -93,6 +94,7 @@ export function AuthProvider({ children }) {
               .database()
               .ref("/users/" + userId)
               .set({
+                username: generate().spaced,
                 date_created: firebase.database.ServerValue.TIMESTAMP,
               });
           })
@@ -105,8 +107,30 @@ export function AuthProvider({ children }) {
     return unsubscribe;
   }, []);
 
+  useEffect(() => {
+    if (!authUser) {
+      setUser(null);
+      return;
+    }
+    const userRef = firebase.database().ref(`/users/${authUser.uid}`);
+
+    function update(snapshot) {
+      setUser({
+        ...snapshot.val(),
+        id: authUser.uid,
+      });
+      setLoading(false);
+    }
+
+    userRef.on("value", update);
+    return () => {
+      userRef.off("value", update);
+    };
+  }, [authUser]);
+
   const value = {
-    currentUser,
+    authUser,
+    user,
     signup,
     login,
     signout,

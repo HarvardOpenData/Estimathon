@@ -41,7 +41,7 @@ function LoginPage() {
   const classes = useStyles();
   const emailRef = useRef();
   const passwordRef = useRef();
-  const { login, currentUser } = useAuth();
+  const { login, authUser } = useAuth();
 
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -51,13 +51,13 @@ function LoginPage() {
     setError("");
   }
 
-  async function handleSubmit(event) {
+  function handleSubmit(event) {
     event.preventDefault();
 
     try {
       setError(false);
       setLoading(true);
-      await login(emailRef.current.value, passwordRef.current.value);
+      login(emailRef.current.value, passwordRef.current.value);
       history.push("/");
     } catch (e) {
       console.log(e);
@@ -69,7 +69,7 @@ function LoginPage() {
 
   return (
     <Container component="main" maxWidth="xs">
-      {currentUser.isAnonymous ? (
+      {authUser.isAnonymous ? (
         <div className={classes.paper}>
           <Dialog open={error} onClose={handleClose}>
             <DialogTitle>Error</DialogTitle>

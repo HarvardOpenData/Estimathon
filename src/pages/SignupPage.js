@@ -43,7 +43,7 @@ function SignupPage() {
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmationRef = useRef();
-  const { signup, currentUser } = useAuth();
+  const { signup, authUser } = useAuth();
   const history = useHistory();
 
   const [error, setError] = useState(false);
@@ -55,7 +55,7 @@ function SignupPage() {
     setError("");
   }
 
-  async function handleSubmit(event) {
+  function handleSubmit(event) {
     event.preventDefault();
 
     setFailedConfirmPass(false);
@@ -71,7 +71,7 @@ function SignupPage() {
       try {
         setError(false);
         setLoading(true);
-        await signup(emailRef.current.value, passwordRef.current.value);
+        signup(emailRef.current.value, passwordRef.current.value);
         history.push("/");
       } catch (e) {
         console.log(e);
@@ -84,7 +84,7 @@ function SignupPage() {
 
   return (
     <Container component="main" maxWidth="xs">
-      {currentUser.isAnonymous ? (
+      {authUser.isAnonymous ? (
         <div className={classes.paper}>
           <Dialog open={error} onClose={handleClose}>
             <DialogTitle>Error</DialogTitle>
