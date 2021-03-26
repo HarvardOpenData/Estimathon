@@ -74,17 +74,19 @@ function PuzzleHuntPage() {
             value={value}
             onChange={handleChange}
             aria-label="simple tabs example"
+            variant="scrollable"
+            scrollButtons="auto"
             centered
           >
             {puzzles.map((puzzle, index) => {
               if (index === 0) {
                 return <Tab label={"Puzzle 1"} {...a11yProps(0)} />;
               }
-              return <Tab label={`Puzzle ${index + 1}`} {...a11yProps(index)} disabled={!(user.guesses && user.guesses[index - 1] && user.guesses[index - 1].every((guess, i) => guess === puzzles[index - 1].passwords[i]))} />
+              return <Tab label={`Puzzle ${index + 1}`} {...a11yProps(index)} disabled={!(user.guesses && user.guesses[index - 1] && user.guesses[index - 1].every((guess, i) => guess.toLowerCase() === puzzles[index - 1].passwords[i]))} />
             })}
-            <Tab label="Congrats!" {...a11yProps(3)} disabled={!(user.guesses && user.guesses[2] && user.guesses[2].every((guess, i) => guess === puzzles[2].passwords[i]))} />
-            <Tab label="Bonus" {...a11yProps(4)} disabled={!(user.guesses && user.guesses[2] && user.guesses[2].every((guess, i) => guess === puzzles[2].passwords[i]))} />
-            {!bonusLoading && <Tab label="Bonus Congrats!" {...a11yProps(5)} disabled={!(user.guesses && user.guesses[3] && user.guesses[3].every((guess, i) => guess === bonus[0].passwords[i]))} />}
+            <Tab label="Congrats!" {...a11yProps(3)} disabled={!(user.guesses && user.guesses[2] && user.guesses[2].every((guess, i) => guess.toLowerCase() === puzzles[2].passwords[i]))} />
+            <Tab label="Bonus" {...a11yProps(4)} disabled={!(user.guesses && user.guesses[2] && user.guesses[2].every((guess, i) => guess.toLowerCase() === puzzles[2].passwords[i]))} />
+            {!bonusLoading && <Tab label="Bonus Congrats!" {...a11yProps(5)} disabled={!(user.guesses && user.guesses[3] && user.guesses[3].every((guess, i) => guess.toLowerCase() === bonus[0].passwords[i]))} />}
           </Tabs>
         </AppBar>
         {currentSettings.questions.map((id, i) => {
