@@ -62,7 +62,7 @@ function PuzzleHuntPage() {
     setValue(newValue);
   }
 
-  if (currentSettingsLoading || puzzlesLoading) {
+  if (currentSettingsLoading || puzzlesLoading || bonusLoading) {
     return (
       <div>Puzzles are loading!</div>
     )
@@ -86,7 +86,7 @@ function PuzzleHuntPage() {
             })}
             <Tab label="Congrats!" {...a11yProps(3)} disabled={!(user.guesses && user.guesses[2] && user.guesses[2].every((guess, i) => guess.toLowerCase() === puzzles[2].passwords[i]))} />
             <Tab label="Bonus" {...a11yProps(4)} disabled={!(user.guesses && user.guesses[2] && user.guesses[2].every((guess, i) => guess.toLowerCase() === puzzles[2].passwords[i]))} />
-            {!bonusLoading && <Tab label="Bonus Congrats!" {...a11yProps(5)} disabled={!(user.guesses && user.guesses[3] && user.guesses[3].every((guess, i) => guess.toLowerCase() === bonus[0].passwords[i]))} />}
+            {!bonusLoading && <Tab label="Bonus Congrats!" {...a11yProps(5)} disabled={!(user.guesses && user.guesses[3] && user.guesses[3].every((guess, i) => guess.toLowerCase() === bonus.passwords[i]))} />}
           </Tabs>
         </AppBar>
         {currentSettings.questions.map((id, i) => {
