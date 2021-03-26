@@ -17,18 +17,9 @@ import {
 import { useHistory } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import CustomLink from "../components/CustomLink";
+import PaperContainer from "../components/PaperContainer";
 
 const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
   form: {
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(1),
@@ -43,7 +34,7 @@ function SignupPage() {
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmationRef = useRef();
-  const { signup, currentUser } = useAuth();
+  const { signup, authUser } = useAuth();
   const history = useHistory();
 
   const [error, setError] = useState(false);
@@ -55,7 +46,7 @@ function SignupPage() {
     setError("");
   }
 
-  async function handleSubmit(event) {
+  function handleSubmit(event) {
     event.preventDefault();
 
     setFailedConfirmPass(false);
@@ -71,7 +62,7 @@ function SignupPage() {
       try {
         setError(false);
         setLoading(true);
-        await signup(emailRef.current.value, passwordRef.current.value);
+        signup(emailRef.current.value, passwordRef.current.value);
         history.push("/");
       } catch (e) {
         console.log(e);
@@ -83,9 +74,9 @@ function SignupPage() {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
-      {currentUser.isAnonymous ? (
-        <div className={classes.paper}>
+    <Container component="main" maxWidth="sm">
+      {authUser.isAnonymous ? (
+        <PaperContainer>
           <Dialog open={error} onClose={handleClose}>
             <DialogTitle>Error</DialogTitle>
             <DialogContent>
@@ -158,7 +149,7 @@ function SignupPage() {
               Already have an account? Log In
             </CustomLink>
           </form>
-        </div>
+        </PaperContainer>
       ) : (
         <div>
           You are already logged in. Please sign out before signing up again.
