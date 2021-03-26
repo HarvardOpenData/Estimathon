@@ -2,8 +2,6 @@ import React from "react";
 import { Button } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import app from "../firebase";
-import firebase from "firebase";
 
 function HomePage() {
   const history = useHistory();
