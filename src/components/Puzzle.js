@@ -16,7 +16,7 @@ function Puzzle({ puzzleId }) {
     () => {
       if (puzzle) {
         setGuesses(user.guesses && user.guesses[puzzleId] ? user.guesses[puzzleId] : puzzle.passwords.map(e => ""));
-        setDisabled(user.guesses && user.guesses[puzzleId] ? user.guesses[puzzleId].every((guess, i) => guess === puzzle.passwords[i]) : false);
+        setDisabled(user.guesses && user.guesses[puzzleId] ? user.guesses[puzzleId].every((guess, i) => guess.toLowerCase() === puzzle.passwords[i]) : false);
       }
     },
     [puzzle]
@@ -38,7 +38,7 @@ function Puzzle({ puzzleId }) {
     guessesRef.update({
       [puzzleId]: guesses
     });
-    const correctGuesses = guesses.every((guess, i) => guess === puzzle.passwords[i]);
+    const correctGuesses = guesses.every((guess, i) => guess.toLowerCase() === puzzle.passwords[i]);
     setDisabled(correctGuesses);
     setIncorrect(!correctGuesses);
     setOpen(correctGuesses);
