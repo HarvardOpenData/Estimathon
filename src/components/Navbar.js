@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Navbar() {
   const classes = useStyles();
-  const { currentUser, signout } = useAuth();
+  const { authUser, user, signout } = useAuth();
 
   return (
     <div className={classes.root}>
@@ -37,7 +37,10 @@ function Navbar() {
           <Button color="inherit" component={Link} to={"/"}>
             Estimathon
           </Button>
-          {currentUser.isAnonymous ? (
+          <Button color="inherit" component={Link} to={`/profile/${user.id}`}>
+            Profile
+          </Button>
+          {authUser.isAnonymous ? (
             <React.Fragment>
               <Button color="inherit" component={Link} to={"/login"}>
                 Login

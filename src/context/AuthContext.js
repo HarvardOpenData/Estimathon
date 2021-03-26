@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import { auth } from "../firebase.js";
+import app, { auth } from "../firebase.js";
 import firebase from "firebase";
+import generate from "project-name-generator";
 import { Backdrop, CircularProgress, makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -18,7 +19,8 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const classes = useStyles();
-  const [currentUser, setCurrentUser] = useState();
+  const [authUser, setAuthUser] = useState();
+  const [user, setUser] = useState();
   const [loading, setLoading] = useState(true);
 
   function signup(email, password) {
@@ -32,6 +34,12 @@ export function AuthProvider({ children }) {
       .then((cred) => {
         const user = cred.user;
         setLoading(false);
+        app
+          .database()
+          .ref("/users/" + user.uid)
+          .update({
+            email: user.email,
+          });
         console.log("Anonymous account successfully upgraded", user);
       })
       .catch((error) => {
@@ -50,6 +58,10 @@ export function AuthProvider({ children }) {
         user
           .delete()
           .catch((error) => console.log("Error deleting account", error));
+        app
+          .database()
+          .ref("/users/" + user.uid)
+          .remove();
       })
       .catch((error) => {
         console.log("Error logging in", error);
@@ -70,15 +82,23 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        setCurrentUser(user);
-        setLoading(false);
+        setAuthUser(user);
       } else {
         // User is signed out.
-        setCurrentUser(null);
-        firebase
-          .auth()
+        setAuthUser(null);
+        auth
           .signInAnonymously()
-          .catch((error) => {
+          .then((cred) => {
+            const userId = cred.user.uid;
+            app
+              .database()
+              .ref("/users/" + userId)
+              .set({
+                username: generate().spaced,
+                date_created: firebase.database.ServerValue.TIMESTAMP,
+              });
+          })
+          .catch(() => {
             alert("Unable to connect to the server. Please try again later.");
           });
       }
@@ -87,8 +107,30 @@ export function AuthProvider({ children }) {
     return unsubscribe;
   }, []);
 
+  useEffect(() => {
+    if (!authUser) {
+      setUser(null);
+      return;
+    }
+    const userRef = firebase.database().ref(`/users/${authUser.uid}`);
+
+    function update(snapshot) {
+      setUser({
+        ...snapshot.val(),
+        id: authUser.uid,
+      });
+      setLoading(false);
+    }
+
+    userRef.on("value", update);
+    return () => {
+      userRef.off("value", update);
+    };
+  }, [authUser]);
+
   const value = {
-    currentUser,
+    authUser,
+    user,
     signup,
     login,
     signout,

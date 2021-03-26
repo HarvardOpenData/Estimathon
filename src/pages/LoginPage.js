@@ -16,18 +16,9 @@ import {
 import { useHistory } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import CustomLink from "../components/CustomLink";
+import PaperContainer from "../components/PaperContainer";
 
 const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
   form: {
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(1),
@@ -41,7 +32,7 @@ function LoginPage() {
   const classes = useStyles();
   const emailRef = useRef();
   const passwordRef = useRef();
-  const { login, currentUser } = useAuth();
+  const { login, authUser } = useAuth();
 
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -51,13 +42,13 @@ function LoginPage() {
     setError("");
   }
 
-  async function handleSubmit(event) {
+  function handleSubmit(event) {
     event.preventDefault();
 
     try {
       setError(false);
       setLoading(true);
-      await login(emailRef.current.value, passwordRef.current.value);
+      login(emailRef.current.value, passwordRef.current.value);
       history.push("/");
     } catch (e) {
       console.log(e);
@@ -68,9 +59,9 @@ function LoginPage() {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
-      {currentUser.isAnonymous ? (
-        <div className={classes.paper}>
+    <Container component="main" maxWidth="sm">
+      {authUser.isAnonymous ? (
+        <PaperContainer>
           <Dialog open={error} onClose={handleClose}>
             <DialogTitle>Error</DialogTitle>
             <DialogContent>
@@ -126,7 +117,7 @@ function LoginPage() {
               </Grid>
             </Grid>
           </form>
-        </div>
+        </PaperContainer>
       ) : (
         <div>
           You are already logged in. Please sign out before logging in again.
